@@ -22,13 +22,10 @@ class MainActivity : AppCompatActivity() {
                 WindowManager.LayoutParams.FLAG_FULLSCREEN
         )*/
         super.onCreate(savedInstanceState)
+        mBinding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
         initPage()
-
-        mBinding = ActivityMainBinding.inflate(layoutInflater)
-
-
-        setContentView(binding.root)
         binding.startButton.setOnClickListener {
             Toast.makeText(this, "test", Toast.LENGTH_SHORT).show()
             val intent = Intent(this, PlayActivity::class.java)
