@@ -2,9 +2,8 @@ package com.example.facepoker
 
 import android.content.Intent
 import android.content.pm.ActivityInfo
-import android.os.Build
+import android.os.*
 import androidx.appcompat.app.AppCompatActivity
-import android.os.Bundle
 import android.view.MotionEvent
 import android.view.View
 import android.widget.Toast
@@ -20,7 +19,23 @@ class PlayActivity : AppCompatActivity() {
     private var my_coin = 0
     private var betcount = 0
     private var leastbetcount = 0
-    private var myturn = true
+    private var myturn = false
+    private var enemyturn = false
+
+    private var useNetwork = false
+
+    private var handler = object: Handler(Looper.getMainLooper()){
+        override fun handleMessage(msg: Message) {
+            when{
+                myturn->{
+                    myturn = false
+                }
+                enemyturn->{
+                    enemyturn = false
+                }
+            }
+        }
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         mBinding = ActivityPlayBinding.inflate(layoutInflater)
