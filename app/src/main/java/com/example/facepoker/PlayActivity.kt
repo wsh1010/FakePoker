@@ -97,6 +97,16 @@ class PlayActivity : AppCompatActivity() {
         binding.okbtn.setOnClickListener {
             binding.betFrame.visibility = View.VISIBLE
             binding.countFrame.visibility = View.INVISIBLE
+            
+            if (mybetcount == 0) {
+                //실행 취소
+            } else {
+                //턴 종료
+                endTurn( mybetcount )
+            }
+            //상태 초기화
+            mybetcount = 0
+            binding.betcount.text = mybetcount.toString()
         }
 
         binding.upBtn.setOnClickListener {
@@ -105,7 +115,12 @@ class PlayActivity : AppCompatActivity() {
         }
         binding.donwBtn.setOnClickListener {
             mybetcount--
+            if ( mybetcount < 0 ) mybetcount = 0
             binding.betcount.text = mybetcount.toString()
         }
     }
+    private fun endTurn(betCoin: Int) {
+        myturn = false
+    }
+
 }
