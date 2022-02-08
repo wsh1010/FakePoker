@@ -12,9 +12,10 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.example.facepoker.databinding.ActivityMainBinding
+import com.example.facepoker.databinding.ActivityRoomBinding
 
-class MainActivity : AppCompatActivity() {
-    private var mBinding: ActivityMainBinding? = null
+class RoomActivity : AppCompatActivity() {
+    private var mBinding: ActivityRoomBinding? = null
     private val binding get() = mBinding!!
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -23,13 +24,18 @@ class MainActivity : AppCompatActivity() {
                 WindowManager.LayoutParams.FLAG_FULLSCREEN
         )*/
         super.onCreate(savedInstanceState)
-        mBinding = ActivityMainBinding.inflate(layoutInflater)
+        mBinding = ActivityRoomBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         initPage()
-        binding.startButton.setOnClickListener {
+        binding.CreateButton.setOnClickListener {
             Toast.makeText(this, "test", Toast.LENGTH_SHORT).show()
-            val intent = Intent(this, RoomActivity::class.java)
+            val intent = Intent(this, PlayActivity::class.java)
+            startActivity(intent)
+        }
+        binding.RandomButton.setOnClickListener {
+            Toast.makeText(this, "test", Toast.LENGTH_SHORT).show()
+            val intent = Intent(this, PlayActivity::class.java)
             startActivity(intent)
         }
 

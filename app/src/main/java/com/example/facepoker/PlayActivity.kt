@@ -1,12 +1,9 @@
 package com.example.facepoker
 
-import android.content.Intent
-import android.content.pm.ActivityInfo
 import android.os.*
 import androidx.appcompat.app.AppCompatActivity
 import android.view.MotionEvent
 import android.view.View
-import android.widget.Toast
 import com.example.facepoker.databinding.ActivityPlayBinding
 
 class PlayActivity : AppCompatActivity() {
@@ -15,8 +12,9 @@ class PlayActivity : AppCompatActivity() {
 
     //게임에 필요한 변수
     private var mybetcount = 0
-    private var enemy_coin = 0
-    private var my_coin = 0
+    private var holdingenemycoin = 0
+    private var holdingmycoin = 0
+    private var needbetCoin = 0
     private var betcount = 0
     private var leastbetcount = 0
     private var myturn = false
@@ -58,14 +56,14 @@ class PlayActivity : AppCompatActivity() {
     //게임 초기화
     private fun initGame(){
         mybetcount = 0
-        enemy_coin = 30
-        my_coin = 30
+        holdingenemycoin = 30
+        holdingmycoin = 30
         betcount = 0
         leastbetcount = 0
         myturn = true
         binding.betcount.text = mybetcount.toString()
-        binding.enemyCoin.text = enemy_coin.toString()
-        binding.myCoin.text = my_coin.toString()
+        binding.enemyCoin.text = holdingenemycoin.toString()
+        binding.myCoin.text = holdingmycoin.toString()
         binding.allBetCoin.text = betcount.toString()
     }
 
@@ -86,12 +84,14 @@ class PlayActivity : AppCompatActivity() {
         binding.betbtn.setOnClickListener {
             binding.betFrame.visibility = View.INVISIBLE
             binding.countFrame.visibility = View.VISIBLE
+            mybetcount = needbetCoin // 적이 bet 한 금액보다 크거나 같아야 함!
         }
 
         binding.diebtn.setOnClickListener {
             /*Toast.makeText(this, "die", Toast.LENGTH_SHORT).show()
             binding.betFrame.visibility = View.INVISIBLE
             binding.countFrame.visibility = View.VISIBLE*/
+            endMyTurn( 0 )
         }
 
         binding.okbtn.setOnClickListener {
@@ -102,7 +102,7 @@ class PlayActivity : AppCompatActivity() {
                 //실행 취소
             } else {
                 //턴 종료
-                endTurn( mybetcount )
+                endMyTurn( mybetcount )
             }
             //상태 초기화
             mybetcount = 0
@@ -115,12 +115,58 @@ class PlayActivity : AppCompatActivity() {
         }
         binding.donwBtn.setOnClickListener {
             mybetcount--
-            if ( mybetcount < 0 ) mybetcount = 0
+            if ( mybetcount < needbetCoin ) mybetcount = needbetCoin
             binding.betcount.text = mybetcount.toString()
         }
     }
-    private fun endTurn(betCoin: Int) {
+
+    private fun initPlay() {
+        binding.myCard.setImageResource(getResourceCard())
+        binding.enemyCard.setImageResource(getResourceCard())
+    }
+    private fun startGame(enemyCard: Int) {
+        binding.enemyCard.setImageResource(getResourceCard(enemyCard))
+    }
+
+    private fun startMyTurn(enemyBetCoin: Int = 0, needBet: Int = 0) {
+        myturn = true
+        holdingenemycoin -= enemyBetCoin
+        binding.enemyCoin.text = holdingenemycoin.toString()
+        needbetCoin = needBet
+    }
+    private fun endMyTurn(betCoin: Int) {
         myturn = false
+    }
+    private fun setCoin(myCoin: Int, enemyCoin: Int, betCoin: Int) {
+        holdingmycoin = myCoin
+        holdingenemycoin = enemyCoin
+        betcount = betCoin
+        binding.enemyCoin.text = holdingenemycoin.toString()
+    }
+    private fun endGame(myCard: Int, win: Boolean, getCoin: Int) {
+        binding.myCard.setImageResource(getResourceCard(myCard))
+        holdingmycoin += getCoin
+        if(!win) {
+            if (myCard == 10)
+                holdingmycoin -= 10
+        }
+        binding.myCoin.text = holdingmycoin.toString()
+    }
+
+    private fun getResourceCard(cardNumber: Int = -1): Int{
+        return when(cardNumber){
+            1 -> R.drawable.card1
+            2 -> R.drawable.card2
+            3 -> R.drawable.card3
+            4 -> R.drawable.card4
+            5 -> R.drawable.card5
+            6 -> R.drawable.card6
+            7 -> R.drawable.card7
+            8 -> R.drawable.card8
+            9 -> R.drawable.card9
+            10 -> R.drawable.card10
+            else -> R.drawable.cardask
+        }
     }
 
 }
